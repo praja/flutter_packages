@@ -100,7 +100,7 @@ final class VideoPlayer {
             .setCache(simpleCache)
             .setUpstreamDataSourceFactory(httpDataSourceFactory)
             .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
-    MediaSource.Factory mediaSourceFactory = new DefaultMediaSourceFactory(context).setDataSourceFactory(cachedDataSourceFactory);
+    MediaSource mediaSource = new DefaultMediaSourceFactory(context).setDataSourceFactory(cachedDataSourceFactory).createMediaSource(MediaItem.fromUri(uri));
 
     // Custom buffering parameters
     DefaultLoadControl loadControl = new DefaultLoadControl.Builder().
@@ -109,9 +109,9 @@ final class VideoPlayer {
 
     ExoPlayer exoPlayer = new ExoPlayer.Builder(context)
             .setLoadControl(loadControl)
-            .setMediaSourceFactory(mediaSourceFactory)
             .build();
 
+    exoPlayer.addMediaSource(mediaSource);
     exoPlayer.prepare();
 
     setUpVideoPlayer(exoPlayer, new QueuingEventSink());
