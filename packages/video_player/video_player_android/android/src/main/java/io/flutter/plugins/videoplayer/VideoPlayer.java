@@ -55,7 +55,7 @@ final class VideoPlayer {
   private static final String FORMAT_HLS = "hls";
   private static final String FORMAT_OTHER = "other";
 
-  private static final long CACHE_SIZE = 10 * 1024 * 1024;
+  private static final long CACHE_SIZE = 75 * 1024 * 1024;
 
   private ExoPlayer exoPlayer;
 
@@ -95,7 +95,7 @@ final class VideoPlayer {
     // Cache setup
     LeastRecentlyUsedCacheEvictor evictor = new LeastRecentlyUsedCacheEvictor(CACHE_SIZE);
     DatabaseProvider cacheIndex = new StandaloneDatabaseProvider(context);
-    SimpleCache simpleCache = new SimpleCache(new File(context.getCacheDir(), "media"), evictor, cacheIndex);
+    SimpleCache simpleCache = new SimpleCache(new File(context.getCacheDir(), "video"), evictor, cacheIndex);
     DataSource.Factory cachedDataSourceFactory = new CacheDataSource.Factory()
             .setCache(simpleCache)
             .setUpstreamDataSourceFactory(httpDataSourceFactory)
