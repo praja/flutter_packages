@@ -55,8 +55,6 @@ final class VideoPlayer {
   private static final String FORMAT_HLS = "hls";
   private static final String FORMAT_OTHER = "other";
 
-  private static final long CACHE_SIZE = 75 * 1024 * 1024;
-
   private ExoPlayer exoPlayer;
 
   private Surface surface;
@@ -93,18 +91,16 @@ final class VideoPlayer {
     buildHttpDataSourceFactory(httpHeaders);
 
     // Cache setup
-    LeastRecentlyUsedCacheEvictor evictor = new LeastRecentlyUsedCacheEvictor(CACHE_SIZE);
-    DatabaseProvider cacheIndex = new StandaloneDatabaseProvider(context);
-    SimpleCache simpleCache = new SimpleCache(new File(context.getCacheDir(), "video"), evictor, cacheIndex);
+    SimpleCache simpleCache = Cache.getInstance(context);
     DataSource.Factory cachedDataSourceFactory = new CacheDataSource.Factory()
             .setCache(simpleCache)
             .setUpstreamDataSourceFactory(httpDataSourceFactory)
             .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
-    MediaSource mediaSource = new DefaultMediaSourceFactory(context).setDataSourceFactory(cachedDataSourceFactory).createMediaSource(MediaItem.fromUri(uri));
+    MediaSource mediaSource = buildMediaSource(uri, cachedDataSourceFactory, formatHint, context);
 
     // Custom buffering parameters
-    DefaultLoadControl loadControl = new DefaultLoadControl.Builder().
-            setBufferDurationsMs(18000, 42000, DefaultLoadControl.DEFAULT_BUFFER_FOR_PLAYBACK_AFTER_REBUFFER_MS, DefaultLoadControl.DEFAULT_BUFFER_FOR_PLAYBACK_MS)
+    DefaultLoadControl loadControl = new DefaultLoadControl.Builder()
+            .setBufferDurationsMs(18000, 42000, DefaultLoadControl.DEFAULT_BUFFER_FOR_PLAYBACK_AFTER_REBUFFER_MS, DefaultLoadControl.DEFAULT_BUFFER_FOR_PLAYBACK_MS)
             .build();
 
     ExoPlayer exoPlayer = new ExoPlayer.Builder(context)
