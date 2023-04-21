@@ -10,7 +10,7 @@ import com.google.android.exoplayer2.upstream.cache.SimpleCache;
 import java.io.File;
 
 public class Cache {
-    private static final long CACHE_SIZE = 75 * 1024 * 1024;
+    private static final long CACHE_SIZE = 150 * 1024 * 1024;
     private static volatile SimpleCache instance = null;
 
     public static SimpleCache getInstance(Context context) {
