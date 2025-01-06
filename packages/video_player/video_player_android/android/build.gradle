@@ -40,10 +40,6 @@ android {
         disable 'AndroidGradlePluginVersion', 'InvalidPackage', 'GradleDependency'
         baseline file("lint-baseline.xml")
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
 
     dependencies {
         def exoplayer_version = "2.18.5"
